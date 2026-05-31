@@ -118,7 +118,7 @@ the issues query returns.
 
 ## Live URL
 
-> `https://devpulse-api.onrender.com` (staging — may be asleep, first request may take ~30s)
+> **Production:** [`https://devpulse-api-ten.vercel.app`](https://devpulse-api-ten.vercel.app) (Vercel)
 
 ## Response Envelope
 
