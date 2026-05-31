@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "server": "npx tsx src/index.ts",
+    "server:watch": "npx tsx watch src/index.ts",
     "dev": "npx tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc"
