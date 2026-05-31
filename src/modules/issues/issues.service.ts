@@ -181,6 +181,7 @@ export async function listIssues(params: IssueListParams): Promise<IssueWithRepo
   const values: Array<string | number> = [];
   let paramIndex = 1;
 
+  // Default to newest-first; oldest is the only other recognised value.
   const sort = params.sort === "oldest" ? "oldest" : "newest";
 
   if (isIssueType(params.type)) {
