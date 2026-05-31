@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { sendError } from "../utils/response.js";
 import { AppError } from "../utils/response.js";
 
+// Centralised Express error-handling middleware (4-arg signature).
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(
   err: unknown,
