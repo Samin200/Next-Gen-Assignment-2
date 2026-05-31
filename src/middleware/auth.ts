@@ -2,6 +2,7 @@ import type { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
+// Token expiry is set via env.JWT_EXPIRES_IN (e.g. "7d") and verified by jsonwebtoken.
 import { env } from "../config/env.js";
 import { sendError } from "../utils/response.js";
 import type { AuthenticatedRequest, AuthUser, JwtPayload } from "../utils/types.js";
