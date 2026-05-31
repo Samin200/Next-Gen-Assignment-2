@@ -116,6 +116,10 @@ Authorization: <jwt>
 Reporter info is fetched in a **separate query** using `WHERE id IN (...)` after
 the issues query returns.
 
+## Live URL
+
+> `https://devpulse-api.onrender.com` (staging — may be asleep, first request may take ~30s)
+
 ## Response Envelope
 
 ```json
