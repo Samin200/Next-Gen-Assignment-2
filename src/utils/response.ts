@@ -19,6 +19,7 @@ export interface ApiError<E = unknown> {
   errors?: E;
 }
 
+/** Send a standard 2xx response with the { success, message, data } envelope. */
 export function sendSuccess<T>(
   res: Response,
   status: number,
