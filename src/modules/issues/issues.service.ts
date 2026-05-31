@@ -202,6 +202,7 @@ export async function listIssues(params: IssueListParams): Promise<IssueWithRepo
     });
   }
 
+  // Clauses are joined with AND so type + status filters compose correctly.
   const where =
     whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
   const order = sort === "oldest" ? "ASC" : "DESC";
