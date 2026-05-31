@@ -1,3 +1,4 @@
+// Bootstrap — create the Express app and start listening.
 import { env } from "./config/env.js";
 import { createApp } from "./app.js";
 
