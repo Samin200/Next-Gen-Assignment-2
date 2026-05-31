@@ -2,6 +2,8 @@ import pg from "pg";
 
 const { Pool } = pg;
 
+/** PostgreSQL connection pool using env defaults (or .env overrides). */
+
 export const pool = new Pool({
   host: process.env.DB_HOST ?? "localhost",
   port: Number(process.env.DB_PORT ?? 5432),
