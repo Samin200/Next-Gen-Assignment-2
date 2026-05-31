@@ -85,7 +85,7 @@ export async function signup(input: SignupInput): Promise<PublicUser> {
     [email],
   );
   if (existing.rowCount && existing.rowCount > 0) {
-    throw badRequest("Email already registered");
+    throw badRequest("Email already registered. Please use a different email or log in.");
   }
 
   const passwordHash = await bcrypt.hash(password, env.BCRYPT_ROUNDS);
