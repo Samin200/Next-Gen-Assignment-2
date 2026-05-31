@@ -7,6 +7,7 @@ import * as authService from "./auth.service.js";
 
 // Auth HTTP handlers — thin wrappers around auth service.
 
+// Validate inputs first in the controller layer so malformed requests never reach the service.
 export async function signup(
   req: Request<unknown, unknown, SignupBody>,
   res: Response,
