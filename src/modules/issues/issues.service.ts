@@ -277,7 +277,7 @@ export async function updateIssue(
     sets.push(`type = $${idx++}`);
     values.push(patch.type);
   }
-  sets.push(`updated_at = NOW()`);
+  sets.push(`updated_at = NOW()`);  // Always bump timestamp so clients can detect the change.
 
   values.push(id);
   const sql = `UPDATE issues SET ${sets.join(", ")}
