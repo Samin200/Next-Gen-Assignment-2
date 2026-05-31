@@ -1,3 +1,4 @@
+// Enum guards — validate that raw input matches one of the allowed string values.
 export const VALID_ROLES = ["contributor", "maintainer"] as const;
 export type Role = (typeof VALID_ROLES)[number];
 
