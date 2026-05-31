@@ -1,3 +1,4 @@
+// Issues controller — clean imports, thin handlers, delegates to service layer.
 import type { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
