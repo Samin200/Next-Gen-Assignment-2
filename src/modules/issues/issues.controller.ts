@@ -9,6 +9,17 @@ import type {
 } from "../../utils/types.js";
 import * as issuesService from "./issues.service.js";
 
+function parseId(raw: string | string[] | undefined): number {
+  if (typeof raw !== "string" || raw.length === 0) {
+    throw badRequest("Validation failed", { id: "id must be a positive integer" });
+  }
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n <= 0) {
+    throw badRequest("Validation failed", { id: "id must be a positive integer" });
+  }
+  return n;
+}
+
 export async function create(
   req: AuthenticatedRequest,
   res: Response,
@@ -40,6 +51,20 @@ export async function list(
       status: query.status,
     });
     sendSuccess(res, StatusCodes.OK, "Issues fetched successfully", issues);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getById(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const id = parseId(req.params.id);
+    const issue = await issuesService.getIssueById(id);
+    sendSuccess(res, StatusCodes.OK, "Issue fetched successfully", issue);
   } catch (err) {
     next(err);
   }

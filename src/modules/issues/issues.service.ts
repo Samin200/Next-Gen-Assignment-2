@@ -1,5 +1,5 @@
 import pool from "../../config/db.js";
-import { AppError, badRequest } from "../../utils/response.js";
+import { AppError, badRequest, notFound } from "../../utils/response.js";
 import type {
   AuthUser,
   CreateIssueBody,
@@ -102,6 +102,32 @@ export async function createIssue(
   const row = result.rows[0];
   if (!row) throw new AppError(500, "Failed to create issue");
   return row;
+}
+
+async function assertReporterExists(reporterId: number): Promise<void> {
+  const result = await pool.query<{ id: number }>(
+    `SELECT id FROM users WHERE id = $1 LIMIT 1`,
+    [reporterId],
+  );
+  if (!result.rowCount || result.rowCount === 0) {
+    throw badRequest("Validation failed", {
+      reporter_id: "Reporter does not exist",
+    });
+  }
+}
+
+export async function getIssueById(id: number): Promise<IssueWithReporter> {
+  const result = await pool.query<IssueRow>(
+    `SELECT id, title, description, type, status, reporter_id, created_at, updated_at
+     FROM issues WHERE id = $1 LIMIT 1`,
+    [id],
+  );
+  const row = result.rows[0];
+  if (!row) throw notFound("Issue not found");
+
+  const reporters = await fetchReporters([row.reporter_id]);
+  const [withReporter] = attachReporters([row], reporters);
+  return withReporter;
 }
 
 export async function listIssues(params: IssueListParams): Promise<IssueWithReporter[]> {

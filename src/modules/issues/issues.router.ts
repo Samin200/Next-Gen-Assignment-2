@@ -6,6 +6,7 @@ import * as issuesController from "./issues.controller.js";
 const router = Router();
 
 router.get("/", issuesController.list);
+router.get("/:id", issuesController.getById);
 router.post("/", requireAuth, issuesController.create);
 
 export default router;
