@@ -88,6 +88,7 @@ export async function signup(input: SignupInput): Promise<PublicUser> {
     throw badRequest("Email already registered. Please use a different email or log in.");
   }
 
+  // Clamp salt rounds to 8–12: <8 is insecure, >12 is diminishing returns on CPU.
   const passwordHash = await bcrypt.hash(password, env.BCRYPT_ROUNDS);
 
   const result = await pool.query<UserRow>(
