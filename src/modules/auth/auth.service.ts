@@ -42,6 +42,7 @@ function validateSignupInput(input: SignupInput): {
       role: "Role must be either 'contributor' or 'maintainer'",
     });
   }
+  // Trim whitespace and normalise email before any DB operation.
   return {
     name: input.name.trim(),
     email: input.email.trim().toLowerCase(),
