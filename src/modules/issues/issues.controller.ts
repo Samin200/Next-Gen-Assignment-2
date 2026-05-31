@@ -2,6 +2,8 @@ import type { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { badRequest, sendSuccess } from "../../utils/response.js";
+
+// Issues HTTP handlers — parse params, delegate to service, format response.
 import type {
   AuthenticatedRequest,
   CreateIssueBody,
@@ -85,6 +87,23 @@ export async function update(
     const body = req.body as UpdateIssueBody;
     const issue = await issuesService.updateIssue(id, body, req.user);
     sendSuccess(res, StatusCodes.OK, "Issue updated successfully", issue);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function remove(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const id = parseId(req.params.id);
+    await issuesService.deleteIssue(id);
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Issue deleted successfully",
+    });
   } catch (err) {
     next(err);
   }
