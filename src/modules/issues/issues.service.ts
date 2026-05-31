@@ -246,7 +246,8 @@ export async function updateIssue(
   const row = existing.rows[0];
   if (!row) throw notFound("Issue not found");
 
-  // Permission checks
+  // Permission checks: ownership first, then status.
+  // Checking ownership before status avoids leaking whether an issue you don't own is still open.
   if (user.role === "contributor") {
     if (row.reporter_id !== user.id) {
       throw forbidden("You can only update issues you reported");
