@@ -249,6 +249,7 @@ export async function updateIssue(
   if (!row) throw notFound("Issue not found");
 
   // Permission checks: ownership first, then status.
+  // 403 = forbidden (wrong owner), 409 = conflict (issue not in open state).
   // Checking ownership before status avoids leaking whether an issue you don't own is still open.
   if (user.role === "contributor") {
     if (row.reporter_id !== user.id) {
