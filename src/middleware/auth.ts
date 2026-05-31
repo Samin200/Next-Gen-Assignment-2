@@ -9,6 +9,7 @@ import type { AuthenticatedRequest, AuthUser, JwtPayload } from "../utils/types.
 /**
  * JWT verify middleware.
  * Expects header: `Authorization: <token>` (no "Bearer" prefix).
+ * On success attaches `req.user` with id, name, role.
  */
 export function requireAuth(
   req: AuthenticatedRequest,
