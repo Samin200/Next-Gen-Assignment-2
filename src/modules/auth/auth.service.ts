@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Auth business logic — signup (validate + hash + insert) and login (lookup + compare + sign JWT).
 import { env } from "../../config/env.js";
 import pool from "../../config/db.js";
 import { AppError, badRequest, unauthorized } from "../../utils/response.js";
@@ -101,7 +102,6 @@ export async function signup(input: SignupInput): Promise<PublicUser> {
   return toPublicUser(row);
 }
 
-// Process login and generate JWT token
 export async function login(input: LoginInput): Promise<{ token: string; user: PublicUser }> {
   const { email, password } = validateLoginInput(input);
 
