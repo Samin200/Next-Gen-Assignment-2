@@ -1,7 +1,11 @@
 import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-// Standardised API response helpers and error factory classes.
+/**
+ * Standardised API response helpers and error factory classes.
+ * All controller responses should go through these helpers to guarantee
+ * a consistent { success, message, data } envelope.
+ */
 
 export interface ApiSuccess<T> {
   success: true;
