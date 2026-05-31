@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Load and validate environment variables with sensible defaults.
+
 export const env = {
   PORT: Number(process.env.PORT ?? 3000),
   JWT_SECRET: process.env.JWT_SECRET ?? "devpulse-dev-secret-change-me",
