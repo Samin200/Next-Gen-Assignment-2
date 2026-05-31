@@ -5,6 +5,8 @@ PostgreSQL with the native `pg` driver and raw SQL (no ORMs, no JOINs).
 
 ## Stack
 
+> A progressive backend API built step by step.
+
 - **Runtime:** Node.js (LTS)
 - **Language:** TypeScript (strict mode, no `any`)
 - **Framework:** Express.js
@@ -136,4 +138,3 @@ the issues query returns.
 | 404  | Resource not found |
 | 409  | Business logic conflict |
 | 500  | Unexpected server error |
-# Next-Gen-Assignment-2
