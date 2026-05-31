@@ -33,6 +33,7 @@ export async function create(
       next(badRequest("Unauthorized"));
       return;
     }
+    // req.user is attached by requireAuth middleware; id comes from the JWT payload.
     const body = req.body as CreateIssueBody;
     const issue = await issuesService.createIssue(body, req.user);
     sendSuccess(res, StatusCodes.CREATED, "Issue created successfully", issue);
