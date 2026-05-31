@@ -3,6 +3,7 @@ import pg from "pg";
 const { Pool } = pg;
 
 /** PostgreSQL connection pool using env defaults (or .env overrides). */
+// The pool is initialised lazily — connections are only created on first query.
 
 export const pool = new Pool({
   host: process.env.DB_HOST ?? "localhost",
