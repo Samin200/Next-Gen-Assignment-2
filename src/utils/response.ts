@@ -1,6 +1,8 @@
 import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
+// Standardised API response helpers and error factory classes.
+
 export interface ApiSuccess<T> {
   success: true;
   message: string;
