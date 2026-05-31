@@ -6,6 +6,7 @@ import type {
   AuthenticatedRequest,
   CreateIssueBody,
   IssueListQuery,
+  UpdateIssueBody,
 } from "../../utils/types.js";
 import * as issuesService from "./issues.service.js";
 
@@ -65,6 +66,25 @@ export async function getById(
     const id = parseId(req.params.id);
     const issue = await issuesService.getIssueById(id);
     sendSuccess(res, StatusCodes.OK, "Issue fetched successfully", issue);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function update(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (!req.user) {
+      next(badRequest("Unauthorized"));
+      return;
+    }
+    const id = parseId(req.params.id);
+    const body = req.body as UpdateIssueBody;
+    const issue = await issuesService.updateIssue(id, body, req.user);
+    sendSuccess(res, StatusCodes.OK, "Issue updated successfully", issue);
   } catch (err) {
     next(err);
   }

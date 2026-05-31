@@ -1,5 +1,5 @@
 import pool from "../../config/db.js";
-import { AppError, badRequest, notFound } from "../../utils/response.js";
+import { AppError, badRequest, conflict, forbidden, notFound } from "../../utils/response.js";
 import type {
   AuthUser,
   CreateIssueBody,
@@ -7,6 +7,7 @@ import type {
   IssueWithReporter,
   PublicUser,
   ReporterInfo,
+  UpdateIssueBody,
 } from "../../utils/types.js";
 import { isIssueType, isStatus, isNonEmptyString, type IssueStatus, type IssueType } from "../../utils/validators.js";
 
@@ -128,6 +129,101 @@ export async function getIssueById(id: number): Promise<IssueWithReporter> {
   const reporters = await fetchReporters([row.reporter_id]);
   const [withReporter] = attachReporters([row], reporters);
   return withReporter;
+}
+
+function validateUpdateIssue(input: UpdateIssueBody): {
+  title?: string;
+  description?: string;
+  type?: IssueType;
+} {
+  const errors: Record<string, string> = {};
+  const patch: { title?: string; description?: string; type?: IssueType } = {};
+
+  if (input.title !== undefined) {
+    if (!isNonEmptyString(input.title)) {
+      errors.title = "Title must be a non-empty string";
+    } else if (input.title.length > 150) {
+      errors.title = "Title must be 150 characters or fewer";
+    } else {
+      patch.title = input.title.trim();
+    }
+  }
+  if (input.description !== undefined) {
+    if (!isNonEmptyString(input.description)) {
+      errors.description = "Description must be a non-empty string";
+    } else {
+      patch.description = input.description.trim();
+    }
+  }
+  if (input.type !== undefined) {
+    if (!isIssueType(input.type)) {
+      errors.type = "Type must be 'bug' or 'feature_request'";
+    } else {
+      patch.type = input.type;
+    }
+  }
+
+  if (Object.keys(errors).length > 0) throw badRequest("Validation failed", errors);
+
+  if (Object.keys(patch).length === 0) {
+    throw badRequest("No valid fields provided for update");
+  }
+  return patch;
+}
+
+export async function updateIssue(
+  id: number,
+  body: UpdateIssueBody,
+  user: AuthUser,
+): Promise<IssueRow> {
+  const patch = validateUpdateIssue(body);
+
+  const existing = await pool.query<IssueRow>(
+    `SELECT id, title, description, type, status, reporter_id, created_at, updated_at
+     FROM issues WHERE id = $1 LIMIT 1`,
+    [id],
+  );
+  const row = existing.rows[0];
+  if (!row) throw notFound("Issue not found");
+
+  if (user.role === "contributor") {
+    if (row.reporter_id !== user.id) {
+      throw forbidden("You can only update issues you reported");
+    }
+    if (row.status !== "open") {
+      throw conflict(
+        "Contributors can only update issues that are still in 'open' status",
+      );
+    }
+  }
+
+  const sets: string[] = [];
+  const values: Array<string | number> = [];
+  let idx = 1;
+
+  if (patch.title !== undefined) {
+    sets.push(`title = $${idx++}`);
+    values.push(patch.title);
+  }
+  if (patch.description !== undefined) {
+    sets.push(`description = $${idx++}`);
+    values.push(patch.description);
+  }
+  if (patch.type !== undefined) {
+    sets.push(`type = $${idx++}`);
+    values.push(patch.type);
+  }
+  sets.push(`updated_at = NOW()`);
+
+  values.push(id);
+  const sql = `UPDATE issues SET ${sets.join(", ")}
+               WHERE id = $${idx}
+               RETURNING id, title, description, type, status, reporter_id, created_at, updated_at`;
+
+  const updated = await pool.query<IssueRow>(sql, values);
+  const updatedRow = updated.rows[0];
+  if (!updatedRow) throw new AppError(500, "Failed to update issue");
+  return updatedRow;
 }
 
 export async function listIssues(params: IssueListParams): Promise<IssueWithReporter[]> {
