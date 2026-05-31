@@ -5,6 +5,8 @@ import { sendError } from "../utils/response.js";
 import type { AuthenticatedRequest } from "../utils/types.js";
 import type { Role } from "../utils/validators.js";
 
+// Role-based access control — wraps routes that require specific roles.
+
 /**
  * Returns middleware that enforces the authenticated user has one of the
  * allowed roles. Must be placed AFTER requireAuth in the chain.
