@@ -5,6 +5,8 @@ import { sendSuccess } from "../../utils/response.js";
 import type { SignupBody, LoginBody } from "../../utils/types.js";
 import * as authService from "./auth.service.js";
 
+// Auth HTTP handlers — thin wrappers around auth service.
+
 export async function signup(
   req: Request<unknown, unknown, SignupBody>,
   res: Response,
