@@ -75,6 +75,7 @@ export async function getById(
   }
 }
 
+// PATCH expects a partial body; only supplied fields are validated and applied.
 export async function update(
   req: AuthenticatedRequest,
   res: Response,
