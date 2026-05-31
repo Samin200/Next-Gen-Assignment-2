@@ -101,6 +101,7 @@ export async function signup(input: SignupInput): Promise<PublicUser> {
   return toPublicUser(row);
 }
 
+// Process login and generate JWT token
 export async function login(input: LoginInput): Promise<{ token: string; user: PublicUser }> {
   const { email, password } = validateLoginInput(input);
 
