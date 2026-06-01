@@ -51,25 +51,23 @@ schema.sql                 ← DDL (run once against Postgres)
    npm install
    ```
 
-2. **Create the database**
+2. **Create the database** (if using local PostgreSQL)
 
    ```bash
    createdb devpulse
    psql devpulse < schema.sql
    ```
 
-3. **Configure env** (`.env` — all values have sensible defaults)
+   Or use a cloud database (Supabase, Neon, etc.) and get a `DATABASE_URL`.
+
+3. **Configure env** (`.env`)
 
    ```env
    PORT=3000
    JWT_SECRET=change-me
    JWT_EXPIRES_IN=7d
    BCRYPT_ROUNDS=10
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USER=postgres
-   DB_PASSWORD=postgres
-   DB_NAME=devpulse
+   DATABASE_URL=postgresql://user:password@host:5432/dbname?sslmode=require
    ```
 
 4. **Run in dev**
